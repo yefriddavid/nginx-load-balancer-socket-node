@@ -25,6 +25,8 @@ services:
     image: node:8.15.1-jessie
     volumes:
       - ./app:/app
+    depends_on:
+      - redis
     networks:
       america_api:
         ipv4_address: 173.17.0.110
@@ -41,6 +43,8 @@ services:
     image: node:8.15.1-jessie
     volumes:
       - ./app:/app
+    depends_on:
+      - redis
     networks:
       america_api:
         ipv4_address: 173.17.0.120
@@ -56,13 +60,15 @@ services:
     image: node:8.15.1-jessie
     volumes:
       - ./app:/app
+    depends_on:
+      - redis
     networks:
       america_api:
         ipv4_address: 173.17.0.130
 
 
   redis:
-    container_name: intance_redis
+    container_name: instance_redis
     image: redis:5.0.4
     networks:
       america_api:
