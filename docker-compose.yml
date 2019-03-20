@@ -1,0 +1,81 @@
+version: '2'
+services:
+  proxy-balancer:
+    container_name: proxy-balancer
+    image: nginx:1.15.2
+    volumes:
+      - ./nginx-config/default.conf:/etc/nginx/conf.d/default.conf
+      - ./app:/usr/share/nginx/html
+    networks:
+      america_api:
+        ipv4_address: 173.17.0.10
+    depends_on:
+      - srv1
+      - srv2
+      - srv3
+
+  srv1:
+    container_name: instance_srv1
+    hostname: srv1
+    domainname: america.com
+    working_dir: /app
+    command:
+      - npm
+      - start
+    image: node:8.15.1-jessie
+    volumes:
+      - ./app:/app
+    networks:
+      america_api:
+        ipv4_address: 173.17.0.110
+
+
+  srv2:
+    container_name: instance_srv2
+    hostname: srv2
+    domainname: america.com
+    working_dir: /app
+    command:
+      - npm
+      - start
+    image: node:8.15.1-jessie
+    volumes:
+      - ./app:/app
+    networks:
+      america_api:
+        ipv4_address: 173.17.0.120
+
+  srv3:
+    container_name: instance_srv3
+    hostname: srv3
+    domainname: america.com
+    working_dir: /app
+    command:
+      - npm
+      - start
+    image: node:8.15.1-jessie
+    volumes:
+      - ./app:/app
+    networks:
+      america_api:
+        ipv4_address: 173.17.0.130
+
+
+  redis:
+    container_name: intance_redis
+    image: redis:5.0.4
+    networks:
+      america_api:
+        ipv4_address: 173.17.0.200
+
+
+networks:
+  america_api:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+      - subnet: 173.17.0.0/16
+    driver_opts:
+      "com.docker.network.bridge.name": "america-api"
+
